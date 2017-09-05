@@ -1,2 +1,3 @@
-# my-portfolio
-my professional portfolio
+# David Hay's portfolio
+
+This is my professional portfolio it uses AWS and ReactJS.
