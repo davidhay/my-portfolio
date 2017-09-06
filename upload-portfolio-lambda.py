@@ -34,6 +34,9 @@ def lambda_handler(event, context):
     		    portfolio_bucket.Object(nm).Acl().put(ACL='public-read')
         print 'deploy portfolio job done!'
         topic.publish(Subject="Portfolio Deployed",Message="Portfolio Deployed Successfully!")
+        if job:
+            codepipeline = boto3.client('codepipeline')
+            codepipeline.put_job_success_result(jobId=job["id"])
     except:
         topic.publish(Subject="Portfolio Deploy FAILED",Message="Portfolio Deployment FAILED")
         raise
