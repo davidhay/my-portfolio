@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Babel Demo</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mocha/3.5.0/mocha.css" />
 		<style media="screen">
 			.messageBox {
 				border: 1px solid red;
@@ -25,10 +26,13 @@
 	<body>
 		<main>
 		<div id="content"></div>
+		<div id="mocha"></div>
 		</main>
 		<script src="https://unpkg.com/babel-standalone"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.1/react.js" ></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.1/react-dom.js" ></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/chai/4.1.2/chai.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/3.5.0/mocha.js"></script>
 		<script type="text/babel" data-presets="react">
 			class NameInput extends React.Component {
 				constructor(props){
@@ -36,7 +40,7 @@
 					this.state = {
 						message: {
 							type: undefined,
-							body: "This is the NameInputs error text"
+							body: ""
 						}
 					}
 					this.buttonClicked = this.buttonClicked.bind(this);//YUCH
@@ -73,5 +77,66 @@
 			}
 			ReactDOM.render(<NameInput/>,document.getElementById('content'));
 		</script>
+		<script type="text/babel" data-presets="react">
+			const assert = chai.assert;
+
+			mocha.ui("bdd");
+			mocha.reporter("html");
+
+			describe("example tests", () => {
+			
+				it("proved that maths works", () => {
+					assert.equal(5, 3+2,"Maths works in Javascript ;-)");
+					assert.notEqual(6, 3+2,"5 != 6");
+				});
+
+				it("proved that are components are ok", () => {
+					assert.isDefined(MessageBox,"react class MessageBox should be defined.");
+				});
+
+				const greet = (name) => "Hello " + name + "!";
+				it("proved that greet works", () => {
+					let myName = "david";
+					assert.equal("Hello david!",greet(myName));
+					assert.include(greet(myName),myName, "Greeting should include passed in name.");
+				});
+			});
+
+			describe("document tests", () => {
+				it("rendered an empty message box", () => {
+					let msgBox = document.querySelector(".messageBox");
+					assert.isDefined(msgBox,"Message Box is in document.");
+					assert.include(msgBox.classList.value,"hidden","Message Box is initially hidden.");
+					assert.notInclude(msgBox.classList.value,"error","Message Box NOT in error");
+					console.log("MESSAGE BOX TEXT[",msgBox.innerText,"]");
+					assert.equal(msgBox.innerText,'',"Message Box is empty");
+
+				});
+				it("rendered an error when name is empty", () => {
+					let msgBox = document.querySelector(".messageBox");
+					let button = document.querySelector("#submit_info");
+
+					button.click();
+
+					assert.include(msgBox.classList.value,"error","Message Box in error mode");
+					assert.notInclude(msgBox.classList.value,"hidden","Message Box NOT hidden");
+					assert.equal(msgBox.innerText,'You must enter a name!',"Error Message Must Be Displayed");
+
+				});
+				it("rendered no error when name is NOT empty", () => {
+					let msgBox = document.querySelector(".messageBox");
+					let button = document.querySelector("#submit_info");
+					let name = document.querySelector("#name")
+					name.value = 'David'
+					button.click();
+
+					assert.include(msgBox.classList.value,"success","Message Box in success mode");
+					assert.notInclude(msgBox.classList.value,"hidden","Message Box NOT hidden");
+					assert.equal(msgBox.innerText,'Welcome to React David',"Message Must include Name");
+				});
+			});
+
+			mocha.run();
+			</script>
 	</body>
 </html>
