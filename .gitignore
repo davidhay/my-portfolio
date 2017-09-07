@@ -58,3 +58,5 @@ typings/
 .env
 
 serverless-portfolio-with-react-2b876ad0-ce82-4234-a642-cacd3a73fa81.zip
+
+dist
