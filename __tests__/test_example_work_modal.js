@@ -21,19 +21,21 @@ describe("ExampleWorkModal component", () => {
 	let openComponent = shallow(<ExampleWorkModal example={myexample} open={true} />);
 
 	let anchors = component.find('a');
+	let paras = component.find('p');
 
 	it("should contain a single anchor element", () => {
 		expect(anchors.length).toEqual(1);
 	});
 
 	let anchor = anchors.nodes[0];
+	let para = paras.nodes[0];
 
 	it("should contain a link to our example", () => {
 		expect(anchor.props.href).toEqual(myexample.href);
 	});
 
 	it("should contain the correct description", () => {
-		expect(anchor.props.children).toEqual(myexample.desc);
+		expect(para.props.children).toEqual(myexample.desc);
 	});
 
 	let images = component.find('img');
