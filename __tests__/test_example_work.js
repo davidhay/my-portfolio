@@ -26,20 +26,29 @@ describe("ExampleWork component", () => {
 
 		let component = shallow(<ExampleWork work={mywork} />);
 
-	 	it("should be a 'section' element", () => {
+	 	it("should be a 'span' element", () => {
 			//expect("Hello").toEqual("Hello");
 			//console.log(component.debug());
-			expect(component.type()).toEqual('section'); //WORKS!!
+			expect(component.type()).toEqual('span'); //WORKS!!
 		});
 
 		it("should contain the same number of ExampleWorkBubble as there are mywork array elements", () => {
 			expect(component.find('ExampleWorkBubble').length).toEqual(mywork.length);
 		});
+
+		it('should allow the modal to open and close', () => {
+			component.instance().openModal();
+			expect(component.instance().state.modalOpen).toBe(true);
+
+			component.instance().closeModal();
+			expect(component.instance().state.modalOpen).toBe(false);
+		});
 });
 
 describe("ExampleWorkBubble component", () => {
 
-		let component = shallow(<ExampleWorkBubble example={mywork[1]} />);
+		let mockOpenModalFn = jest.fn();//mock function!!!
+		let component = shallow(<ExampleWorkBubble example={mywork[1]} openModal={mockOpenModalFn} />);
 
 		let dts = component.find('dt');
 	 	it("should be have 1 dt", () => {
@@ -67,6 +76,13 @@ describe("ExampleWorkBubble component", () => {
 		});
 		it("should have alt text set correctly", () => {
 			expect(image.props.alt).toEqual("example2 screenshot of a project involving code");
+		});
+
+		it("should call the mockOpenModalFn when clicked", () => {
+			component.find('.section__exampleWrapper').simulate('click');
+
+			expect(mockOpenModalFn).toHaveBeenCalled();
+
 		});
 
 });
